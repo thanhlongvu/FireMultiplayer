@@ -1,0 +1,12 @@
+﻿  AssetManager.cpp
+  Bullet.cpp
+  Client.cpp
+  ClientMain.cpp
+  C_PlayerManager.cpp
+  Game.cpp
+e:\visualstudio\sfml\multiplayergame\clientside\game.cpp(9): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  PacketTypes.cpp
+  Player.cpp
+  WindowGame.cpp
+  Generating Code...
+  ClientSide.vcxproj -> E:\VisualStudio\SFML\MultiplayerGame\x64\Debug\ClientSide.exe
