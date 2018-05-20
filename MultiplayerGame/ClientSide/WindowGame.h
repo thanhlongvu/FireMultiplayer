@@ -22,6 +22,9 @@ public:
 
 	void Draw(sf::Drawable& l_drawable);
 
+	void SetPosView(const sf::Vector2f);
+
+	void SetView(const sf::View&);
 
 public:
 	sf::RenderWindow m_window;
@@ -31,6 +34,8 @@ private:
 	void Setup(const std::string title, const sf::Vector2u& size);
 	void Create();
 	void Destroy();
+	
+	sf::View m_view;
 
 	sf::Vector2u m_windowSize;
 	std::string m_windowTitle;

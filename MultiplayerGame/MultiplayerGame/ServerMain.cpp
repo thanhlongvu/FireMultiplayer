@@ -79,10 +79,18 @@ void Handler(sf::IpAddress& l_ip, const PortNumber& l_port, const PacketID& l_id
 			//Example
 			sf::Vector2f pos;
 			sf::Vector2f dir;
-			l_packet >> pos.x >> pos.y >> dir.x >> dir.y;
+			int bulletOfTeam;
+
+			l_packet >> pos.x >> pos.y >> dir.x >> dir.y >> bulletOfTeam;
+
+			//Save to map
+			Bullet* b = new Bullet(pos, bulletOfTeam);
+			b->SetBulletDirection(dir);
+			l_server->bulletManager.AddBullet(b);
+
 
 			sf::Packet p;
-			CreateFirePacket(p, id, pos, dir);
+			CreateFirePacket(p, id, pos, dir, bulletOfTeam);
 			for (auto itr = l_server->playerManager.m_players.begin(); itr != l_server->playerManager.m_players.end(); itr++)
 			{
 				if (itr->first != id)
@@ -98,8 +106,17 @@ void Handler(sf::IpAddress& l_ip, const PortNumber& l_port, const PacketID& l_id
 		{
 			std::cout << l_ip << ":" << l_port << " request connect to..." << std::endl;
 
-			ClientID id = l_server->AddClient(l_ip, l_port);
+			//PlayerName and teamIndex
+			std::string l_playerName;
+			int l_teamIndex;
 
+			l_packet >> l_playerName >> l_teamIndex;
+
+
+			ClientID id = l_server->AddClient(l_ip, l_port, l_playerName, l_teamIndex);
+
+
+			//Reply
 			sf::Packet packet;
 
 			StampPacket(PacketType::Connect, packet);

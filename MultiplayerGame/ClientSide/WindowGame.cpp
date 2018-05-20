@@ -1,6 +1,9 @@
 #include "WindowGame.h"
 
-WindowGame::WindowGame() { Setup("Window", sf::Vector2u(640, 480)); }
+WindowGame::WindowGame() 
+{ 
+	Setup("Window", sf::Vector2u(640, 480)); 
+}
 WindowGame::WindowGame(const std::string& title, const sf::Vector2u& size) { Setup(title, size); }
 WindowGame::~WindowGame() { Destroy(); }
 
@@ -10,6 +13,8 @@ void WindowGame::Setup(const std::string title, const sf::Vector2u& size) {
 	m_isFullscreen = false;
 	m_isDone = false;
 	m_window.setFramerateLimit(60);
+	m_window.setView(m_view);
+
 	Create();
 }
 
@@ -34,6 +39,16 @@ void WindowGame::Draw(sf::Drawable& l_drawable) {
 	m_window.draw(l_drawable);
 }
 
+void WindowGame::SetPosView(const sf::Vector2f pos)
+{
+	m_view.setCenter(pos);
+}
+
+void WindowGame::SetView(const sf::View & l_view)
+{
+	m_window.setView(l_view);
+}
+
 sf::Vector2u WindowGame::GetWindowSize() { return m_windowSize; }
 
 void WindowGame::ToggleFullscreen() {
@@ -43,6 +58,7 @@ void WindowGame::ToggleFullscreen() {
 }
 
 void WindowGame::Update() {
+
 	sf::Event event;
 	while (m_window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) { m_isDone = true; }

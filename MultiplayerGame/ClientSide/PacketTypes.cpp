@@ -15,9 +15,9 @@ void CreateMovePacket(sf::Packet& p, float x, float y)
 	
 }
 
-void CreateFirePacket(sf::Packet & p, sf::Vector2f pos, sf::Vector2f dir)
+void CreateFirePacket(sf::Packet & p, sf::Vector2f pos, sf::Vector2f dir, const int& bulletOfTeam)
 {
 	StampPacket(PacketType::Player_Fire, p);
 
-	p << pos.x << pos.y << dir.x << dir.y;
+	p << pos.x << pos.y << dir.x << dir.y << bulletOfTeam;
 }

@@ -4,14 +4,18 @@
 C_PlayerManager* Game::playerManager = new C_PlayerManager();
 std::vector<Bullet*> Game::bullets = std::vector<Bullet*>();
 
-Game::Game(Client* client) : m_window("Window", sf::Vector2u(640, 640)) {
+bool Game::isPlaying = true;
+
+Game::Game(Client* client) : m_window("Window", sf::Vector2u(1000, 700)) 
+{
 	RestartClock();
 	srand(time(NULL));
 
 	// Setting up class members.
 	//Position of player
 
-	m_player = playerManager->GetPlayer(client->GetClientID());
+	
+	m_player = *playerManager->GetPlayer(client->GetClientID());
 
 	prePosition = m_player.getPosition();
 	
@@ -42,27 +46,27 @@ void Game::HandleInput() {
 	{
 		// Input handling
 		//Player move left
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && m_player.getPosition().x > 0)
 		{
-			m_player.setPosition(m_player.getPosition().x - 0.2f, m_player.getPosition().y);
+			m_player.setPosition(m_player.getPosition().x - m_player.GetSpeed(), m_player.getPosition().y);
 			
 		}
 		//Player move right
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && m_player.getPosition().x < m_window.GetWindowSize().x)
 		{
-			m_player.setPosition(m_player.getPosition().x + 0.2f, m_player.getPosition().y);
+			m_player.setPosition(m_player.getPosition().x + m_player.GetSpeed(), m_player.getPosition().y);
 
 		}
 		//Player move up
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && m_player.getPosition().y < m_window.GetWindowSize().y)
 		{
-			m_player.setPosition(m_player.getPosition().x, m_player.getPosition().y + 0.2f);
+			m_player.setPosition(m_player.getPosition().x, m_player.getPosition().y + m_player.GetSpeed());
 
 		}
 		//Player move down
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && m_player.getPosition().y > 0)
 		{
-			m_player.setPosition(m_player.getPosition().x, m_player.getPosition().y - 0.2f);
+			m_player.setPosition(m_player.getPosition().x, m_player.getPosition().y - m_player.GetSpeed());
 
 		}
 
@@ -72,7 +76,7 @@ void Game::HandleInput() {
 			sf::Vector2f posBullet(m_player.getPosition().x, m_player.getPosition().y);
 			sf::Vector2f dirBullet((sf::Vector2f)sf::Mouse::getPosition(m_window.m_window) - posBullet);
 
-			Bullet* bullet = new Bullet(posBullet);
+			Bullet* bullet = new Bullet(posBullet, m_player.GetTeamIndex());
 
 			bullet->SetBulletDirection((sf::Vector2f)sf::Mouse::getPosition(m_window.m_window) - posBullet);
 
@@ -82,7 +86,8 @@ void Game::HandleInput() {
 
 			//Create a fire packet
 			sf::Packet* p = new sf::Packet();
-			CreateFirePacket(*p, posBullet, dirBullet);
+			
+			CreateFirePacket(*p, posBullet, dirBullet, bullet->GetBulletOfTeam());
 
 			listPacket.push(p);
 		}
@@ -104,6 +109,8 @@ void Game::HandleInput() {
 void Game::Update() {
 	m_window.Update();
 
+	sf::Lock lock(m_mutex);
+
 	//Update bullet
 	for (int i = 0; i < bullets.size(); i++)
 	{
@@ -114,13 +121,22 @@ void Game::Update() {
 			continue;
 		}
 
-		b->Move(b->GetBulletDirection(),  500 * m_elapsed.asSeconds());
+		b->Move(b->GetBulletDirection(),  b->GetSpeed() * m_elapsed.asSeconds());
 	}
 }
 
 
 void Game::Render() {
 	m_window.BeginDraw(); // Clear.
+
+	//sf::View view;
+
+	////view.setCenter(m_player.getPosition());
+	//view.setSize(m_window.GetWindowSize().x * 2, m_window.GetWindowSize().y * 2);
+	////m_window.SetPosView(m_player.getPosition());
+	//m_window.SetView(view);
+	
+
 
 	//Draw players
 	for (auto itr = playerManager->players.begin(); itr != playerManager->players.end(); itr++)
@@ -134,6 +150,8 @@ void Game::Render() {
 		m_window.Draw(bullets.at(i)->GetBulletSprite());
 	}
 
+
+	
 	//m_window.Draw(m_player.getSprite());
 	m_window.EndDraw(); // Display.
 }

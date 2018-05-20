@@ -1,1 +1,13 @@
-﻿  MultiplayerGame.vcxproj -> E:\VisualStudio\SFML\MultiplayerGame\x64\Debug\ServerSide.exe
+﻿  Bullet.cpp
+  Player.cpp
+e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\multiplayergame\player.cpp(10): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  S_BulletManager.cpp
+  S_PlayerManager.cpp
+e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\multiplayergame\s_playermanager.cpp(22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\multiplayergame\s_playermanager.cpp(61): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\multiplayergame\s_playermanager.cpp(81): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Server.cpp
+e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\multiplayergame\server.cpp(254): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+  ServerMain.cpp
+  Generating Code...
+  MultiplayerGame.vcxproj -> E:\VisualStudio\SFML\git\FireMultiplayer\MultiplayerGame\x64\Debug\ServerSide.exe

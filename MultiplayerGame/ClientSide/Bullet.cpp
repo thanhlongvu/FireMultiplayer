@@ -1,28 +1,32 @@
 #include "Bullet.h"
 
 
-Bullet::Bullet(float x, float y) : Bullet()
+Bullet::Bullet(float x, float y, const int& bulletOfTeam) : Bullet()
 {
-	
+	m_bulletOfTeam = bulletOfTeam;
+
+	bulletSprite = new sf::Sprite(*AssetManager::assets()->GetBulletTexture(bulletOfTeam));
+	bulletSprite->setScale(0.2f, 0.2f);
 	bulletSprite->setPosition(x, y);
 }
 
-Bullet::Bullet(sf::Vector2f pos) : Bullet()
+Bullet::Bullet(sf::Vector2f pos, const int& bulletOfTeam) : Bullet()
 {
+	m_bulletOfTeam = bulletOfTeam;
+
+	bulletSprite = new sf::Sprite(*AssetManager::assets()->GetBulletTexture(bulletOfTeam));
+	bulletSprite->setScale(0.2f, 0.2f);
 	bulletSprite->setPosition(pos);
 }
 
 Bullet::Bullet()
 {
 	damage = 10;
-	speed = 100;
-	timeExist = 3.0f;
+	speed = 1000;
+	timeExist = 1.5f;
 
 	timer.restart();
 
-	bulletSprite = new sf::Sprite(*AssetManager::assets()->GetBulletTexture());
-	bulletSprite->setScale(0.2f, 0.2f);
-	
 }
 
 
@@ -78,4 +82,14 @@ void Bullet::SetBulletDirection(const sf::Vector2f dir)
 sf::Vector2f Bullet::GetBulletDirection() const
 {
 	return this->direction;
+}
+
+int Bullet::GetBulletOfTeam() const
+{
+	return m_bulletOfTeam;
+}
+
+float Bullet::GetSpeed() const
+{
+	return speed;
 }

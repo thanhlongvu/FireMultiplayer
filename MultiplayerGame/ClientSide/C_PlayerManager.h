@@ -9,14 +9,14 @@ public:
 	~C_PlayerManager();
 
 	//Player* GetMainPlayer() const;
-	void AddPlayer(const int);
+	void AddPlayer(const int, const std::string&, const int&);
 	void RemovePlayer(const int);
 
-	Player GetPlayer(const int id) const;
+	Player* GetPlayer(const int id) const;
 
 
 public:
-	//Player main_player;
+	//Player* main_player;
 	std::unordered_map<int, Player*> players;
 };
 

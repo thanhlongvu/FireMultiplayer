@@ -1,7 +1,6 @@
 #include "Server.h"
 
 
-
 Server::Server(void(*l_handler)(sf::IpAddress &, const PortNumber &, const PacketID &, sf::Packet &, Server *)) : m_listenThread(&Server::Listen, this)
 {
 	m_packetHandler = std::bind(l_handler, std::placeholders::_1, std::placeholders::_2,
@@ -138,6 +137,7 @@ void Server::Listen()
 //due to should check status connect by heartbeat
 void Server::Update(const sf::Time & l_time)
 {
+
 	m_serverTime += l_time;
 
 	//Over number 
@@ -155,9 +155,11 @@ void Server::Update(const sf::Time & l_time)
 	}
 
 
-	sf::Lock lock(m_mutex);
+	
 	for (auto itr = m_clients.begin(); itr != m_clients.end();)
 	{
+		sf::Lock lock(m_mutex);
+
 		sf::Int32 elapsed = m_serverTime.asMilliseconds() - itr->second.m_lastHeartbeat.asMilliseconds();
 
 		if (elapsed >= HEARTBEAT_INTERVAL)
@@ -217,9 +219,90 @@ void Server::Update(const sf::Time & l_time)
 		}
 		++itr;
 	}
+
+
+	//Update bullets
+	bulletManager.UpdateBullets(l_time);
+
+
+	//Check collider
+	for (auto& itr : playerManager.m_players)
+	{
+		sf::Lock lock(m_mutex);
+		if (!playerManager.m_players.size())
+			return;
+
+		Player* player = itr.second;
+
+		auto& bulletTeam = player->GetTeamIndex() == 1 ? bulletManager.bulletsTeamTwo : bulletManager.bulletsTeamOne;
+
+		//Check BulletTeamTwo
+		if (!bulletTeam.size())
+			continue;
+
+		for (auto& bullet : bulletTeam)
+		{
+
+			Bullet* b = bullet.second;
+
+			float dis = CalculatorDistance(player->getPosition(), b->GetPosition());
+
+			if (dis < 50.f)
+				//Collider
+			{
+				//Decrease heart of player
+				player->setHeart(player->getHeart() - b->GetDamage());
+
+				//Destroy this bullet
+				bulletTeam.erase(bullet.first);
+
+				//Create a packet send to players
+				//by id_player
+				sf::Packet p;
+				CreateHurtPacket(p, itr.first, b->GetPosition());
+
+				//Send broadcast
+				this->Broadcast(p);
+			}
+
+			//Because this bullet is destroyed
+			break;
+		}
+	}
+
+
+	//Update player: Live or Die
+	for (auto& itr : playerManager.m_players)
+	{
+		//if (!playerManager.m_players.size())
+		//	break;
+
+		sf::Lock lock(m_mutex);
+
+		if (itr.second->isDie())
+		{
+			
+			std::cout << "Player " << itr.first << " die!" << std::endl;
+
+			//Send message to the client
+			sf::Packet p;
+			StampPacket(PacketType::Player_Die, p);
+			p << itr.first;
+
+			Broadcast(p);
+
+			//Remove 
+			playerManager.RemovePlayer(itr.first);
+
+			break;
+		}
+
+		
+	}
+	
 }
 
-ClientID Server::AddClient(const sf::IpAddress & l_ip, const PortNumber & l_port)
+ClientID Server::AddClient(const sf::IpAddress & l_ip, const PortNumber & l_port, const std::string & l_playerName, const int & l_teamIndex)
 {
 	sf::Lock lock(m_mutex);
 
@@ -234,7 +317,7 @@ ClientID Server::AddClient(const sf::IpAddress & l_ip, const PortNumber & l_port
 	m_clients.insert(std::make_pair(id, info));
 
 	//Add Player
-	playerManager.AddPlayer(id);
+	playerManager.AddPlayer(id, l_playerName, l_teamIndex);
 
 	++m_lastID;
 
@@ -423,4 +506,10 @@ void Server::Setup()
 	m_running = false;
 	m_totalSent = 0;
 	m_totalreceived = 0;
+}
+
+float Server::CalculatorDistance(const sf::Vector2f & a, const sf::Vector2f & b)
+{
+	float dis = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+	return dis;
 }

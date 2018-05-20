@@ -13,7 +13,7 @@ using PacketHandler = std::function<void(const PacketID&, sf::Packet&, Client*)>
 class Client
 {
 public:
-	Client();
+	Client(std::string playerName, int teamIndex);
 	~Client();
 
 	bool Connect();
@@ -46,6 +46,8 @@ public:
 
 private:
 	std::string m_playerName;
+	int m_teamIndex;
+
 	int id_client;
 
 	sf::UdpSocket m_socket;

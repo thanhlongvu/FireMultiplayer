@@ -2,6 +2,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/System/Time.hpp>
 #include <unordered_map>
+#include <queue>
 #include <functional>
 #include <iostream>
 
@@ -9,6 +10,7 @@
 #include "NetworkDefinitions.h"
 #include "S_PlayerManager.h"
 #include "Player.h"
+#include "S_BulletManager.h"
 
 #define HEARTBEAT_INTERVAL 2000
 #define HEARTBEAT_RETRIES 5
@@ -80,7 +82,7 @@ public:
 	void Listen();
 	void Update(const sf::Time& l_time);
 
-	ClientID AddClient(const sf::IpAddress& l_ip, const PortNumber& l_port);
+	ClientID AddClient(const sf::IpAddress& l_ip, const PortNumber& l_port, const std::string & l_playerName, const int & l_teamIndex);
 	ClientID GetClientID(const sf::IpAddress& l_ip, const PortNumber& l_port);
 	bool HasClient(const ClientID& l_id);
 	bool HasClient(const sf::IpAddress& l_ip, const PortNumber& l_port);
@@ -106,6 +108,9 @@ public:
 public:
 	//Player manager
 	S_PlayerManager playerManager;
+	//Bullet manager
+	S_BulletManager bulletManager;
+
 
 
 private:
@@ -128,6 +133,8 @@ private:
 	size_t m_totalSent;
 	size_t m_totalreceived;
 
-	
+private:
+	float CalculatorDistance(const sf::Vector2f&, const sf::Vector2f&);
+
 };
 

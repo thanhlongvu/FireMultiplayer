@@ -4,8 +4,8 @@
 class Bullet
 {
 public:
-	Bullet(float x, float y);
-	Bullet(sf::Vector2f);
+	Bullet(float x, float y, const int& bulletOfTeam);
+	Bullet(sf::Vector2f, const int& bulletOfTeam);
 	Bullet();
 	~Bullet();
 
@@ -22,6 +22,13 @@ public:
 	void SetBulletDirection(const sf::Vector2f dir);
 
 	sf::Vector2f GetBulletDirection() const;
+
+	int GetBulletOfTeam() const;
+
+	float GetSpeed() const;
+
+public:
+	int m_bulletOfTeam;
 
 private:
 	float speed;

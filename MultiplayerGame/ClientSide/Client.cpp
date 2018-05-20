@@ -2,7 +2,7 @@
 
 
 //bind the listening thread to the Listen method of this class
-Client::Client() :m_listenThread(&Client::Listen, this)
+Client::Client(std::string playerName, int teamIndex) : m_listenThread(&Client::Listen, this), m_playerName(playerName), m_teamIndex(teamIndex)
 {
 }
 
@@ -21,7 +21,7 @@ bool Client::Connect()
 
 	sf::Packet p;
 	StampPacket(PacketType::Connect, p);
-	p << m_playerName;
+	p << m_playerName << m_teamIndex;
 
 	//Check send status
 	if (m_socket.send(p, m_serverIp, m_serverPort) != sf::Socket::Done)

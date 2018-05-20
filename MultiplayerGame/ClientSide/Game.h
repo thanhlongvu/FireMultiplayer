@@ -33,11 +33,13 @@ public:
 
 	static std::vector<Bullet*> bullets;
 
+	static bool isPlaying;
 private:
 
 	WindowGame m_window;
 	sf::Clock m_clock;
 	sf::Time m_elapsed;
+	sf::Mutex m_mutex;
 
 	Player m_player;
 

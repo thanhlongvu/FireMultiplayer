@@ -126,20 +126,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ClientSide\AssetManager.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="EntityEvent.cpp" />
     <ClCompile Include="PacketTypes.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerMain.cpp" />
+    <ClCompile Include="S_BulletManager.cpp" />
     <ClCompile Include="S_PlayerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ClientSide\Player.h" />
+    <ClInclude Include="..\ClientSide\AssetManager.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="EntityEvent.h" />
     <ClInclude Include="EntityMessage.h" />
     <ClInclude Include="NetworkDefinitions.h" />
     <ClInclude Include="PacketTypes.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="S_BulletManager.h" />
     <ClInclude Include="S_PlayerManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

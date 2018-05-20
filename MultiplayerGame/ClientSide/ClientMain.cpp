@@ -2,6 +2,7 @@
 #include <SFML\Graphics.hpp>
 #include "Game.h"
 
+
 void HandlePacket(const PacketID& l_id, sf::Packet& l_packet, Client* l_client)
 {
 	if ((PacketType)l_id == PacketType::Message)
@@ -27,12 +28,15 @@ void HandlePacket(const PacketID& l_id, sf::Packet& l_packet, Client* l_client)
 
 	else if ((PacketType)l_id == PacketType::List_Player)
 	{
-		int id_player, heart_player;
+		int id_player, heart_player, teamIndex;
+		std::string playerName;
+
+
 		sf::Vector2f pos_player;
-		l_packet >> id_player >> heart_player >> pos_player.x >> pos_player.y;
+		l_packet >> id_player >> heart_player >> pos_player.x >> pos_player.y >> teamIndex >> playerName;
 
 		//Update to playerManager
-		Player* player = new Player();
+		Player* player = new Player(teamIndex, playerName);
 		player->setHeart(heart_player);
 		player->setPosition(pos_player);
 
@@ -47,7 +51,7 @@ void HandlePacket(const PacketID& l_id, sf::Packet& l_packet, Client* l_client)
 		l_packet >> id_player >> x >> y;
 
 		//Update
-		Game::playerManager->GetPlayer(id_player).setPosition(x, y);
+		Game::playerManager->GetPlayer(id_player)->setPosition(x, y);
 	}
 
 	//Fire packet
@@ -55,15 +59,43 @@ void HandlePacket(const PacketID& l_id, sf::Packet& l_packet, Client* l_client)
 	{
 		int id_player;
 		float x, y;
-
 		sf::Vector2f dir;
+		int bulletOfTeam;
 
-		l_packet >> id_player >> x >> y >> dir.x >> dir.y;
+		l_packet >> id_player >> x >> y >> dir.x >> dir.y >> bulletOfTeam;
 
-		Bullet* b = new Bullet(x, y);
+		Bullet* b = new Bullet(x, y, bulletOfTeam);
 		b->SetBulletDirection(dir);
 
 		Game::bullets.push_back(b);
+	}
+
+	//Hurt packet
+	else if ((PacketType)l_id == PacketType::Hurt)
+	{
+		int id_player;
+		sf::Vector2f pos_explosion;
+
+		l_packet >> id_player >> pos_explosion.x >> pos_explosion.y;
+
+		Player* player = Game::playerManager->GetPlayer(id_player);
+		player->setHeart(player->getHeart() - 10);
+
+		std::cout << "Player " << id_player << " decrease heart: " << player->getHeart() << std::endl;
+		//Explosion
+		
+	}
+	//Player die packet
+	else if ((PacketType)l_id == PacketType::Player_Die)
+	{
+		int id_playerDie;
+
+		l_packet >> id_playerDie;
+
+		if (id_playerDie == l_client->GetClientID())
+		{
+			Game::isPlaying = false;
+		}
 	}
 	//else if()...
 }
@@ -104,6 +136,7 @@ void CommandProcess(Client* l_client)
 void GameWindow(Client* l_client)
 {
 	Game game(l_client);
+
 	while (!game.GetWindow()->IsDone()) {
 		// Game loop.
 		
@@ -122,22 +155,29 @@ void GameWindow(Client* l_client)
 int main()
 {
 	//Ip and port of server
-	std::string ipAddress;
+	std::string ipAddress("127.0.0.1");
+	std::string playerName;
+	int teamIndex;
+
 	PortNumber port = (unsigned short)Network::ServerPort;
 
-	std::cout << "Enter server ip: " << std::endl;
-	std::cin >> ipAddress;
-
+	//std::cout << "Enter server ip: " << std::endl;
+	//std::cin >> ipAddress;
+	std::cout << "Enter player name: " << std::endl;
+	std::cin >> playerName;
+	std::cout << "Enter team index: " << std::endl;
+	std::cin >> teamIndex;
 
 	sf::IpAddress ip(ipAddress);
 
 
-	Client client;
+	Client client(playerName, teamIndex);
 	client.SetServerInformation(ip, port);
 	client.Setup(&HandlePacket);
 
 	sf::Thread c(&CommandProcess, &client);
 	sf::Thread w(&GameWindow, &client);
+
 
 	if (client.Connect())
 	{
@@ -150,6 +190,15 @@ int main()
 		while (client.isConnected())
 		{
 			client.Update(clock.restart());
+
+			if (!Game::isPlaying)
+			{
+				client.Disconnect();
+				c.terminate();
+				w.terminate();
+				std::cout << "You lose" << std::endl;
+			}
+				
 		}
 	}
 	else
