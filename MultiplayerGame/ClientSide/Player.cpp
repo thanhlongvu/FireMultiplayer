@@ -8,6 +8,11 @@ Player::Player(int teamIndex, std::string name) : m_heart(100), m_speed(0.5f), m
 	m_playerSprite->setScale(0.5f, 0.5f);
 	m_playerSprite->setOrigin(m_playerTexture->getSize().x / 2, m_playerTexture->getSize().y / 2);
 
+	m_circleTexture = AssetManager::assets()->GetCircleTexture();
+	m_circleSprite = new sf::Sprite(*m_circleTexture);
+	m_circleSprite->setScale(0.5f, 0.5f);
+	m_playerSprite->setOrigin(0, 0);
+
 }
 
 Player::Player() : m_heart(100), m_speed(0.5f), m_teamIndex(1), m_name("No Name")
@@ -16,6 +21,11 @@ Player::Player() : m_heart(100), m_speed(0.5f), m_teamIndex(1), m_name("No Name"
 	m_playerSprite = new sf::Sprite(*m_playerTexture);
 	m_playerSprite->setScale(0.5f, 0.5f);
 	m_playerSprite->setOrigin(m_playerTexture->getSize().x / 2, m_playerTexture->getSize().y / 2);
+
+	m_circleTexture = AssetManager::assets()->GetCircleTexture();
+	m_circleSprite = new sf::Sprite(*m_circleTexture);
+	m_circleSprite->setScale(0.75f, 0.75f);
+	m_playerSprite->setOrigin(0, 0);
 }
 
 
@@ -33,6 +43,7 @@ void Player::setPosition(sf::Vector2f pos)
 	
 	m_position = pos;
 	m_playerSprite->setPosition(pos);
+	m_circleSprite->setPosition(pos);
 }
 
 void Player::setPosition(float x, float y)
@@ -41,6 +52,7 @@ void Player::setPosition(float x, float y)
 	m_position = pos;
 
 	m_playerSprite->setPosition(pos);
+	m_circleSprite->setPosition(pos);
 }
 
 int Player::getHeart() const
@@ -91,4 +103,17 @@ void Player::SetPlayerName(const std::string name)
 float Player::GetSpeed() const
 {
 	return m_speed;
+}
+
+void Player::SetCircleSprite()
+{
+	m_circleSprite = new sf::Sprite(*m_circleTexture);
+	m_circleSprite->setScale(0.5f, 0.5f);
+	m_playerSprite->setOrigin(m_circleTexture->getSize().x / 2, m_circleTexture->getSize().y / 2);
+}
+
+sf::Sprite & Player::getCircleSprite() const
+{
+	// TODO: insert return statement here
+	return *m_circleSprite;
 }

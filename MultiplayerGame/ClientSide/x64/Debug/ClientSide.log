@@ -1,9 +1,2 @@
-﻿  C_PlayerManager.cpp
-  ClientMain.cpp
-  Game.cpp
-e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\clientside\game.cpp(12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Player.cpp
-e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\clientside\player.cpp(9): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-e:\visualstudio\sfml\git\firemultiplayer\multiplayergame\clientside\player.cpp(18): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-  Generating Code...
+﻿  ClientMain.cpp
   ClientSide.vcxproj -> E:\VisualStudio\SFML\git\FireMultiplayer\MultiplayerGame\x64\Debug\ClientSide.exe

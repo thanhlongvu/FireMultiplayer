@@ -155,14 +155,14 @@ void GameWindow(Client* l_client)
 int main()
 {
 	//Ip and port of server
-	std::string ipAddress("127.0.0.1");
+	std::string ipAddress;
 	std::string playerName;
 	int teamIndex;
 
 	PortNumber port = (unsigned short)Network::ServerPort;
 
-	//std::cout << "Enter server ip: " << std::endl;
-	//std::cin >> ipAddress;
+	std::cout << "Enter server ip: " << std::endl;
+	std::cin >> ipAddress;
 	std::cout << "Enter player name: " << std::endl;
 	std::cin >> playerName;
 	std::cout << "Enter team index: " << std::endl;

@@ -11,7 +11,7 @@ public:
 
 	sf::Texture* GetPlayerTexture(const int&) const;
 	sf::Texture* GetBulletTexture(const int&) const;
-
+	sf::Texture* GetCircleTexture() const;
 
 private:
 	//Bullet
@@ -21,6 +21,9 @@ private:
 	//Player
 	sf::Texture* playerTexture;
 	sf::Texture* playerTexture2;
+
+	//Circle
+	sf::Texture* circleTexture;
 private:
 	static AssetManager* m_assets;
 

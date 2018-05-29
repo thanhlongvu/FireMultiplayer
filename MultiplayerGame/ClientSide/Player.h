@@ -34,11 +34,17 @@ public:
 
 	float GetSpeed() const;
 
+	void SetCircleSprite();
+
+	sf::Sprite& getCircleSprite() const;
+
 private:
 	int m_heart;
 	float m_speed;
 	sf::Texture* m_playerTexture;
 	sf::Sprite* m_playerSprite;
+	sf::Texture* m_circleTexture;
+	sf::Sprite* m_circleSprite;
 	sf::Vector2f m_position;
 
 	//Team index

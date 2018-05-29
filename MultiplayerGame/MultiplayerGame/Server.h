@@ -51,12 +51,12 @@ using TimeoutHandler = std::function<void(const ClientID&)>;
 class Server
 {
 public:
-	template<class T>
+	/*template<class T>
 	Server(void(T::*l_handler)(sf::IpAddress&, const PortNumber&, const PacketID&, sf::Packet&, Server*), T* l_instance) : m_listenThread(&Server::Listen, this)
 	{
 		m_packetHandler = std::bind(l_handler, l_instance, std::placeholders::_1, std::placeholders::_2,
 			std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
-	}
+	}*/
 
 	Server(void(*l_handler)(sf::IpAddress&, const PortNumber&, const PacketID&, sf::Packet&, Server*));
 	~Server();

@@ -16,6 +16,7 @@ Game::Game(Client* client) : m_window("Window", sf::Vector2u(1000, 700))
 
 	
 	m_player = *playerManager->GetPlayer(client->GetClientID());
+	//m_player.SetCircleSprite();
 
 	prePosition = m_player.getPosition();
 	
@@ -143,6 +144,8 @@ void Game::Render() {
 	{
 		m_window.Draw(itr->second->getSprite());
 	}
+
+	m_window.Draw(m_player.getCircleSprite());
 
 	//Draw bullets
 	for (int i = 0; i < bullets.size(); i++)

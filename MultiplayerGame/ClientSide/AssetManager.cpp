@@ -4,6 +4,9 @@ AssetManager* AssetManager::m_assets = NULL;
 
 AssetManager::AssetManager()
 {
+	circleTexture = new sf::Texture();
+	circleTexture->loadFromFile("Assets\\Circle.png");
+
 	bulletTexture = new sf::Texture();
 	bulletTexture->loadFromFile("Assets\\Bullet.png");
 
@@ -47,5 +50,10 @@ sf::Texture * AssetManager::GetBulletTexture(const int& index) const
 		return bulletTexture;
 
 	return bulletTexture2;
+}
+
+sf::Texture * AssetManager::GetCircleTexture() const
+{
+	return circleTexture;
 }
 
